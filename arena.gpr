@@ -5,7 +5,9 @@ project Arena is
    for Main use ("main.adb");
 
    package Compiler is
-      for Switches ("ada") use ("-gnat2020", "-g", "-O2");
+      for Switches ("ada") use ("-gnat2020", "-g", "-O2",
+		  "-gnata"  -- Pre/Post conditions
+      );
    end Compiler;
 
    package Pretty_Printer is

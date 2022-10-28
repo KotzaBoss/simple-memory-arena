@@ -57,9 +57,11 @@ package Arenas is
       ----------------------
 
    type Object_Reference is tagged private;
-   function Get (Self : in Object_Reference) return Object_Accessor;
-   function Get_Constant (Self : in Object_Reference) return Object_Constant_Accessor;
    Null_Object_Reference : constant Object_Reference;
+   function Get (Self : in Object_Reference) return Object_Accessor with
+     Pre => Self /= Null_Object_Reference;
+   function Get_Constant (Self : in Object_Reference) return Object_Constant_Accessor with
+     Pre => Self /= Null_Object_Reference;
 
    type Object_References is array (Storage_Valid_Offset) of Object_Reference;
 
@@ -70,9 +72,12 @@ package Arenas is
    type Arena is tagged limited private;
    procedure Allocate
      (Self : in out Arena; R : out Object_Reference'Class; OE : in Object_Environment);
-   procedure Deallocate (Self : in out Arena; R : in Object_Reference'Class);
-   function Allocated (Self : in Arena) return Storage_Allocations;
+   procedure Deallocate (Self : in out Arena; R : in out Object_Reference'Class) with
+     Pre => Self.Reference_Is_Valid(R) and Self.Allocations >= 1,
+     Post => Self.Allocations >= 0;
+   function Allocations (Self : in Arena) return Storage_Allocations;
    function Size (Self : in Arena) return Storage_Size;
+   function Reference_Is_Valid (Self : in out Arena; R : in Object_Reference'Class) return Boolean;
 
 private
 
@@ -102,12 +107,10 @@ private
 
    type Arena is tagged limited record
       Internal_Storage : Storage;
+      Allocation_Counter        : Storage_Allocations := 0;
       Allocation_Flags : Storage_Allocation_Flags := (others => False);
    end record;
 
-   function Reference_Is_Valid (Self : in out Arena; R : in Object_Reference'Class) return Boolean;
-   function Find_Reference_Offset
-     (Self : in out Arena; R : in Object_Reference'Class) return Storage_Offset;
    function Find_Available_Offset (Self : in Arena) return Storage_Offset;
 
 end Arenas;

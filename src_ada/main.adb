@@ -9,19 +9,24 @@ with Arenas;
 
 procedure Main is
 
-   -- Object
+   -- Entity Environment
 
    type Alignment is (Invalid, Good, Bad);
    type Alignment_Range is
      range Alignment'Pos (Alignment'Succ (Invalid)) .. Alignment'Pos (Alignment'Last);
-   package Random_Alignment is new Ada.Numerics.Discrete_Random (Alignment_Range);
-   use Random_Alignment;
+
+   package Alignment_Random is new Ada.Numerics.Discrete_Random (Alignment_Range);
+   use Alignment_Random;
+
    Alignment_Gen : Generator;
+   function Random_Alignment return Alignment is (Alignment'Val (Random (Alignment_Gen)));
 
    type Entity_Environment is record
       Align : Alignment;
    end record;
    Default_Entity_Environment : constant Entity_Environment := (Align => Bad);
+
+   -- Entity
 
    type Entity is tagged record
       Align : Alignment := Invalid;
@@ -60,14 +65,16 @@ begin
    -- Allocate
 
    for ER of ERs loop
-      EA.Allocate (ER, (Align => Alignment'Val (Random (Alignment_Gen))));
+      EA.Allocate (ER, (Align => Random_Alignment));
    end loop;
 
+   Assert (EA.Allocations = EA.Size, EA.Allocations'Image & " /=" & EA.Size'Image);
+
    -- Use
+   -- Toy example to show both Accessors
 
    for ER of ERs loop
       declare
-         -- Toy example to show both Accessors
          EAcc       : Entity_Arenas.Object_Accessor          := ER.Get;
          EAcc_Const : Entity_Arenas.Object_Constant_Accessor := ER.Get_Constant;
       begin
@@ -81,16 +88,20 @@ begin
       end;
    end loop;
 
-   Assert (EA.Allocated = EA.Size, EA.Allocated'Image & " /=" & EA.Size'Image);
    Assert (for all ER of ERs => ER.Get.Align /= Invalid and ER.Get.ID /= -1);
 
    -- Deallocate
 
    for ER of ERs loop
       EA.Deallocate (ER);
+      begin
+          ER.Get.ID := 123;
+      exception
+          when E : ASSERTION_ERROR => null; -- Correctly raised
+      end;
    end loop;
 
-   Assert (EA.Allocated = 0, EA.Allocated'Image & " /= 0");
-   Assert (for all ER of ERs => ER.Get.Align = Invalid and ER.Get.ID = -1);
+   Assert (EA.Allocations = 0, EA.Allocations'Image & " /= 0");
+   Assert (for all ER of ERs => not EA.Reference_Is_Valid(ER));
 
 end Main;
