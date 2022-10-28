@@ -15,6 +15,7 @@ package Arenas is
 
    Max_Objects : constant Positive := Max;  -- Q: Can we make the generic visible?
 
+   -- TODO: Make these new types not subtypes
    subtype Storage_Integer is Integer range -1 .. Max_Objects;
 
    subtype Storage_Size is Storage_Integer range 1 .. Storage_Integer'Last;

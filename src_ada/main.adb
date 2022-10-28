@@ -28,9 +28,12 @@ procedure Main is
 
    -- Entity
 
+   subtype Entity_ID is Natural;
+   Invalid_Entity_ID : constant Entity_ID := 0;
+
    type Entity is tagged record
       Align : Alignment := Invalid;
-      ID    : Integer   := 0;
+      ID    : Entity_ID   := Invalid_Entity_ID;
    end record;
 
    procedure Entity_Constructor (Self : in out Entity; E : in Entity_Environment) is
@@ -46,7 +49,7 @@ procedure Main is
    procedure Entity_Destructor (Self : in out Entity) is
    begin
       Self.Align := Invalid;
-      Self.ID    := -1;
+      Self.ID    := 0;
    end Entity_Destructor;
 
    -- Arenas
@@ -88,7 +91,7 @@ begin
       end;
    end loop;
 
-   Assert (for all ER of ERs => ER.Get.Align /= Invalid and ER.Get.ID /= -1);
+   Assert (for all ER of ERs => ER.Get.Align /= Invalid and ER.Get.ID /= Invalid_Entity_ID);
 
    -- Deallocate
 
