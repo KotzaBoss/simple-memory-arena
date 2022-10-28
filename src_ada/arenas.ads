@@ -101,9 +101,6 @@ private
    -----------
 
    type Arena is tagged limited record
-      -- Unfortunately breaks 0 indexing array convention, but i cant find another way for the
-      -- range to have length Max_Objects - 1. Putting Max_Objects - 1 errors with: Discriminant
-      -- must appear alone
       Internal_Storage : Storage;
       Allocation_Flags : Storage_Allocation_Flags := (others => False);
    end record;
