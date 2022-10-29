@@ -5,9 +5,6 @@
 #include <cassert>
 #include <bitset>
 #include <optional>
-#include <algorithm>
-#include <ranges>
-namespace rs = std::ranges;
 
 //
 // std::bitset Utils
@@ -42,9 +39,9 @@ struct Arena {
 	using ObjArray = std::array<T, ContainerSize>;
 	using Bitset = std::bitset<ContainerSize>;
 
-	using Object = ObjArray::value_type;
-	using Iterator = ObjArray::iterator;
-	using ConstIterator = ObjArray::const_iterator;
+	using Object = typename ObjArray::value_type;
+	using Iterator = typename ObjArray::iterator;
+	using ConstIterator = typename ObjArray::const_iterator;
 
 private:
 	ObjArray objs;

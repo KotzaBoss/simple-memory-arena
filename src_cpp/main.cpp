@@ -1,3 +1,7 @@
+#include <algorithm>
+#include <ranges>
+namespace rs = std::ranges;
+
 #include "arena.hpp"
 
 struct Object
