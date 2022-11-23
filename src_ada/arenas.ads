@@ -102,6 +102,7 @@ private
    -- Q: Perhaps avoid this repetition?
    Null_Object_Reference : constant Object_Reference :=
      (O_Access => null, Offset => Invalid_Storage_Offset);
+   procedure Nullify(R : out Object_Reference'Class);
 
    -----------
    -- Arena --

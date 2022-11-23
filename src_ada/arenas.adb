@@ -16,6 +16,13 @@ package body Arenas is
 	   (R.O_Access = Null_Object_Reference.O_Access
         and R.Offset = Null_Object_Reference.Offset);
 
+   procedure Nullify (R : out Object_Reference'Class) is
+   begin
+      R.O_Access := Null_Object_Reference.O_Access;
+      R.Offset   := Null_Object_Reference.Offset;
+   end Nullify;
+
+
    -----------
    -- Arena --
    -----------
@@ -36,8 +43,7 @@ package body Arenas is
          R.O_Access := Self.Internal_Storage (Offset)'Unchecked_Access;
          R.Offset   := Offset;
       else
-         R.O_Access := Null_Object_Reference.O_Access;
-         R.Offset   := Null_Object_Reference.Offset;
+         Nullify(R);
       end if;
    end Allocate;
 
@@ -46,8 +52,7 @@ package body Arenas is
       Self.Allocation_Flags (R.Offset) := False;
       Self.Allocation_Counter := @ - 1;
 
-      R.O_Access := Null_Object_Reference.O_Access;
-      R.Offset   := Null_Object_Reference.Offset;
+      Nullify(R);
    end Deallocate;
 
    function Allocations (Self : in Arena) return Storage_Allocations is (Self.Allocation_Counter);
