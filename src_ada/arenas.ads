@@ -59,10 +59,11 @@ package Arenas is
 
    type Object_Reference is tagged private;
    Null_Object_Reference : constant Object_Reference;
+   function Is_Null(R : in Object_Reference'Class) return Boolean;
    function Get (Self : in Object_Reference) return Object_Accessor with
-     Pre => Self /= Null_Object_Reference;
+     Pre => not Is_Null(Self);
    function Get_Constant (Self : in Object_Reference) return Object_Constant_Accessor with
-     Pre => Self /= Null_Object_Reference;
+     Pre => not Is_Null(Self);
 
    type Object_References is array (Storage_Valid_Offset) of Object_Reference;
 

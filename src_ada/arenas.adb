@@ -12,6 +12,10 @@ package body Arenas is
    function Get_Constant (Self : in Object_Reference) return Object_Constant_Accessor is
      (Object_Access => Self.O_Access);
 
+   function Is_Null (R : in Object_Reference'Class) return Boolean is
+	   (R.O_Access = Null_Object_Reference.O_Access
+        and R.Offset = Null_Object_Reference.Offset);
+
    -----------
    -- Arena --
    -----------
@@ -52,8 +56,7 @@ package body Arenas is
 
    function Reference_Is_Valid
      (Self : in out Arena; R : in Object_Reference'Class) return Boolean is
-       ((R.O_Access /= Null_Object_Reference.O_Access
-        and R.Offset /= Null_Object_Reference.Offset)
+       (not Is_Null(R)
         and then Self.Internal_Storage (R.Offset)'Unchecked_Access = R.O_Access);
 
    function Find_Available_Offset (Self : in Arena) return Storage_Offset is
