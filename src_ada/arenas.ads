@@ -113,6 +113,6 @@ private
       Allocation_Flags : Storage_Allocation_Flags := (others => False);
    end record;
 
-   function Find_Available_Offset (Self : in Arena) return Storage_Offset;
+   function First_Available_Offset (Self : in Arena) return Storage_Offset;
 
 end Arenas;

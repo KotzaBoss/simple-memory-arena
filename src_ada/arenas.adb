@@ -23,7 +23,7 @@ package body Arenas is
    procedure Allocate
      (Self : in out Arena; R : out Object_Reference'Class; OE : in Object_Environment)
    is
-      Offset : constant Storage_Offset := Self.Find_Available_Offset;
+      Offset : constant Storage_Offset := Self.First_Available_Offset;
    begin
       if Offset /= Invalid_Storage_Offset then
          Self.Allocation_Flags (Offset) := True;
@@ -59,7 +59,7 @@ package body Arenas is
        (not Is_Null(R)
         and then Self.Internal_Storage (R.Offset)'Unchecked_Access = R.O_Access);
 
-   function Find_Available_Offset (Self : in Arena) return Storage_Offset is
+   function First_Available_Offset (Self : in Arena) return Storage_Offset is
    begin
       for I in Self.Allocation_Flags'Range loop
          if not Self.Allocation_Flags (I) then
@@ -67,6 +67,6 @@ package body Arenas is
          end if;
       end loop;
       return Invalid_Storage_Offset;
-   end Find_Available_Offset;
+   end First_Available_Offset;
 
 end Arenas;
