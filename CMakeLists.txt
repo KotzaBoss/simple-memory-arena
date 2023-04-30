@@ -76,7 +76,7 @@ endforeach()
 
 add_custom_target(RUN_ADA
   COMMAND
-    for OBJS in {1..10000}\; do ./build/ada/main $OBJS\; done\;
+    for OBJS in {1..10000}\; do ./ada/main $$OBJS\; done\;
   USES_SHELL
   )
 

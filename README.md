@@ -1,6 +1,6 @@
 To build:
 ```shell
-cmake -C build && make -B build -j$(nproc)
+cmake -B build && make -C build -j$(nproc)
 ```
 The interesting parts of the build directory are:
 ```
